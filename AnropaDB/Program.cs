@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AnropaDB.Data;
 using AnropaDB.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,28 +34,22 @@ namespace AnropaDB
                     switch (input)
                 {
                     case "F":
-
-                        {
                             FetchCustomer(context);
-                        }
                         break;
 
                     case "C":
-                        {
                             ChooseCustomer(context);
-                        }
                         break;
 
                     case "A":
-                        {
                             AddCustomer(context);
-                        }
                         break;
 
                     default:
-                        if (input != "E") { 
+                        if (input != "E") 
+                        { 
                         Console.WriteLine("Wrong input. Try again.");
-                    }
+                        }
                         break;
                 }
             }
@@ -115,20 +109,19 @@ namespace AnropaDB
             Console.WriteLine("Enter the company name of the customer you want to look up: ");
             string customerChoice = Console.ReadLine().ToUpper();
             var selectedCustomer = context.Customers
-            .Where(c => c.CompanyName.ToUpper() == customerChoice.ToUpper())
+            .Where(c => c.CompanyName.ToUpper() == customerChoice)
             .Select(c => new { c.CompanyName, c.ContactName, c.ContactTitle, c.Address, c.City, c.Region, c.PostalCode, c.Country, c.Phone, c.Fax })
             .FirstOrDefault();
 
             Console.WriteLine("Company information:");
             if (selectedCustomer != null)
             {
-                foreach (var c in new[] { selectedCustomer })
-                {
-                    Console.WriteLine($"Contact Name: {c.ContactName}, \nContact Title: {c.ContactTitle}, \nAddress: {c.Address}, \nCity: {c.City}, \nRegion: {c.Region}, \nPostal Code: {c.PostalCode}, \nCountry: {c.Country}, \nPhone: {c.Phone}, \nFax: {c.Fax} ");
-                }
+             
+                    Console.WriteLine($"Contact Name: {selectedCustomer.ContactName}, \nContact Title: {selectedCustomer.ContactTitle}, \nAddress: {selectedCustomer.Address}, \nCity: {selectedCustomer.City}, \nRegion: {selectedCustomer.Region}, \nPostal Code: {selectedCustomer.PostalCode}, \nCountry: {selectedCustomer.Country}, \nPhone: {selectedCustomer.Phone}, \nFax: {selectedCustomer.Fax} ");
+                
                 var selectedCustomersOrders = context.Customers
                 .Include(c => c.Orders)
-                .FirstOrDefault(c => c.CompanyName.ToUpper() == customerChoice.ToUpper());
+                .FirstOrDefault(c => c.CompanyName.ToUpper() == customerChoice);
 
                 if (selectedCustomersOrders.Orders.Any())
                 {
