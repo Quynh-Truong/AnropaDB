@@ -7,16 +7,15 @@ namespace AnropaDB
 {
     internal class Program
     {
-        static string GenerateRandomLetters(Random random, int length)
+        static string GenerateCustomerId(string companyName, NorthContext context)
         {
-            string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string customerId = "";
+            string noSpacesCompanyName = companyName.Replace(" ", "");
 
-            char[] result = new char[length];
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = chars[random.Next(chars.Length)];
-            }
-            return new string(result);
+            customerId = noSpacesCompanyName.Substring(0, Math.Min(5, noSpacesCompanyName.Length));
+
+            return customerId.ToUpper();
+
         }
         static void Main(string[] args)
         {
@@ -30,30 +29,31 @@ namespace AnropaDB
                 Console.WriteLine("Press E to exit.");
 
                 input = Console.ReadLine().ToUpper();
-                using (NorthContext context = new NorthContext()) { 
-                    switch (input)
+                using (NorthContext context = new NorthContext())
                 {
-                    case "F":
+                    switch (input)
+                    {
+                        case "F":
                             FetchCustomer(context);
-                        break;
+                            break;
 
-                    case "C":
+                        case "C":
                             ChooseCustomer(context);
-                        break;
+                            break;
 
-                    case "A":
+                        case "A":
                             AddCustomer(context);
-                        break;
+                            break;
 
-                    default:
-                        if (input != "E") 
-                        { 
-                        Console.WriteLine("Wrong input. Try again.");
-                        }
-                        break;
+                        default:
+                            if (input != "E")
+                            {
+                                Console.WriteLine("Wrong input. Try again.");
+                            }
+                            break;
+                    }
                 }
             }
-        }
         }
         static Customer AddCustomer(NorthContext context)
         {
@@ -80,9 +80,8 @@ namespace AnropaDB
             string phone = Console.ReadLine();
             Console.Write("Enter Fax: ");
             string fax = Console.ReadLine();
-            Random random = new Random();
-            string randomLetters = GenerateRandomLetters(random, 5);
-            string customerId = randomLetters;
+
+            string customerId = GenerateCustomerId(companyName, context);
 
             Customer customer = new Customer()
             {
@@ -116,9 +115,9 @@ namespace AnropaDB
             Console.WriteLine("Company information:");
             if (selectedCustomer != null)
             {
-             
-                    Console.WriteLine($"Contact Name: {selectedCustomer.ContactName}, \nContact Title: {selectedCustomer.ContactTitle}, \nAddress: {selectedCustomer.Address}, \nCity: {selectedCustomer.City}, \nRegion: {selectedCustomer.Region}, \nPostal Code: {selectedCustomer.PostalCode}, \nCountry: {selectedCustomer.Country}, \nPhone: {selectedCustomer.Phone}, \nFax: {selectedCustomer.Fax} ");
-                
+
+                Console.WriteLine($"Contact Name: {selectedCustomer.ContactName}, \nContact Title: {selectedCustomer.ContactTitle}, \nAddress: {selectedCustomer.Address}, \nCity: {selectedCustomer.City}, \nRegion: {selectedCustomer.Region}, \nPostal Code: {selectedCustomer.PostalCode}, \nCountry: {selectedCustomer.Country}, \nPhone: {selectedCustomer.Phone}, \nFax: {selectedCustomer.Fax} ");
+
                 var selectedCustomersOrders = context.Customers
                 .Include(c => c.Orders)
                 .FirstOrDefault(c => c.CompanyName.ToUpper() == customerChoice);
