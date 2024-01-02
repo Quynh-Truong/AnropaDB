@@ -7,14 +7,14 @@ namespace AnropaDB
 {
     internal class Program
     {
-        static string GenerateCustomerId(string companyName, NorthContext context)
+        static string GenerateCustomerId(string companyName)
         {
-            string customerId = "";
+
             string noSpacesCompanyName = companyName.Replace(" ", "");
 
-            customerId = noSpacesCompanyName.Substring(0, Math.Min(5, noSpacesCompanyName.Length));
+            string customerId = noSpacesCompanyName.Substring(0, Math.Min(5, noSpacesCompanyName.Length)).ToUpper();
 
-            return customerId.ToUpper();
+            return customerId;
 
         }
         static void Main(string[] args)
@@ -81,7 +81,7 @@ namespace AnropaDB
             Console.Write("Enter Fax: ");
             string fax = Console.ReadLine();
 
-            string customerId = GenerateCustomerId(companyName, context);
+            string customerId = GenerateCustomerId(companyName);
 
             Customer customer = new Customer()
             {
